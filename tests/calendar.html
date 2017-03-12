@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+
+    <title>
+        Jax Calender Test
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="../css/jax.calendar.css" />
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/jax.calendar.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jax.calendar(['#calendar-link', '#publish_date'], '#publish_date');
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="calendar-div">
+        <input type="text" name="publish_date" id="publish_date" value="" size="10" /> <a href="#" id="calendar-link" class="calendar-open-link">[+]</a>
+    </div>
+</body>
+
+</html>
