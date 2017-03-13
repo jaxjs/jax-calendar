@@ -77,7 +77,7 @@ jax.buildCalendar = function(parent, field, format) {
         var curDay = null;
     }
     window.jQuery(parent).append('<div id="calendar"></div>');
-    window.jQuery('#calendar').append('<a id="calendar-close" href="#" class="calendar-close-link">x</a>');
+    window.jQuery('#calendar').append('<a id="calendar-close" href="#" class="calendar-close-link"><span>x</span></a>');
     window.jQuery('#calendar').append('<h5 id="calendar-header" data-field="' + field + '" data-format="' + format +
         '" data-date="' + d.getMonth() + '-' + d.getFullYear() + '"><a href="#" id="prev-month" class="calendar-nav-link" onclick="jax.prevMonth(); return false;">&lt;</a><span id="calendar-header-span">' + window.jax.calendarMonths[d.getMonth()] + ' ' + d.getFullYear() + '</span><a id="next-month" href="#" class="calendar-nav-link" onclick="jax.nextMonth(); return false;">&gt;</a></h5>');
     window.jQuery('#calendar-close').click(function() {
