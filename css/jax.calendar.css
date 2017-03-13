@@ -12,6 +12,7 @@
     z-index: 10000001;
     margin: 0;
     padding: 0;
+    display: none;
     top: 25px;
     left: 0;
     width: 170px;

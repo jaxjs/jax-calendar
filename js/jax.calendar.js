@@ -10,7 +10,7 @@
  * @license    http://www.jaxjs.org/license     New BSD License
  * @version    3.0
  *
- *     Example: jax.calendar('#calendar_icon', '#date_field');
+ *     Example: jax.calendar('#calendar_icon', '#date_field', {"fade" : 250});
  *
  */
 
@@ -25,18 +25,24 @@ jax.calendarMonths = [
 jax.calendarDays   = [
     'S', 'M', 'T', 'W', 'T', 'F', 'S'
 ];
+jax.calendarFade = 0;
+
 // Function to initialize the calendar
-jax.calendar = function(clickObject, dateField, dateFormat, months, days) {
+jax.calendar = function(clickObject, dateField, options) {
+    //dateFormat, months, days , fade
     var field  = dateField;
-    var format = (dateFormat != undefined) ? dateFormat : jax.dateFormat;
+    var format = ((options != undefined) && (options.dateFormat != undefined)) ? options.dateFormat : jax.dateFormat;
 
     jax.dateFormat = format;
 
-    if ((months != undefined) && (months.constructor == Array)) {
-        jax.calendarMonths = months;
+    if ((options != undefined) && (options.months != undefined) && (options.months.constructor == Array)) {
+        jax.calendarMonths = options.months;
     }
-    if ((days != undefined) && (days.constructor == Array)) {
-        jax.calendarDays = days;
+    if ((options != undefined) && (options.days != undefined) && (options.days.constructor == Array)) {
+        jax.calendarDays = options.days;
+    }
+    if ((options != undefined) && (options.fade != undefined)) {
+        jax.calendarFade = options.fade;
     }
     if (clickObject.constructor != Array) {
         clickObject = [clickObject];
@@ -46,7 +52,14 @@ jax.calendar = function(clickObject, dateField, dateFormat, months, days) {
         var curClickObject = clickObject[i];
         window.jQuery(curClickObject).click(function () {
             if (window.jQuery('#calendar')[0] != undefined) {
-                window.jQuery('#calendar').remove();
+                if (jax.calendarFade > 0) {
+                    window.jQuery('#calendar').fadeOut(jax.calendarFade, function() {
+                        window.jQuery('#calendar').remove();
+                    });
+                } else {
+                    window.jQuery('#calendar').hide();
+                    window.jQuery('#calendar').remove();
+                }
             } else {
                 window.jax.buildCalendar(window.jQuery(curClickObject).parent(), field, format);
             }
@@ -63,13 +76,19 @@ jax.buildCalendar = function(parent, field, format) {
         var d      = new Date();
         var curDay = null;
     }
-    console.log(format);
     window.jQuery(parent).append('<div id="calendar"></div>');
     window.jQuery('#calendar').append('<a id="calendar-close" href="#" class="calendar-close-link">x</a>');
     window.jQuery('#calendar').append('<h5 id="calendar-header" data-field="' + field + '" data-format="' + format +
         '" data-date="' + d.getMonth() + '-' + d.getFullYear() + '"><a href="#" id="prev-month" class="calendar-nav-link" onclick="jax.prevMonth(); return false;">&lt;</a><span id="calendar-header-span">' + window.jax.calendarMonths[d.getMonth()] + ' ' + d.getFullYear() + '</span><a id="next-month" href="#" class="calendar-nav-link" onclick="jax.nextMonth(); return false;">&gt;</a></h5>');
     window.jQuery('#calendar-close').click(function() {
-        window.jQuery('#calendar').remove();
+        if (jax.calendarFade > 0) {
+            window.jQuery('#calendar').fadeOut(jax.calendarFade, function() {
+                window.jQuery('#calendar').remove();
+            });
+        } else {
+            window.jQuery('#calendar').hide();
+            window.jQuery('#calendar').remove();
+        }
         return false;
     });
     window.jax.buildMonth(d.getMonth() + '-' + d.getFullYear(), curDay);
@@ -149,6 +168,11 @@ jax.buildMonth= function(date, curDay) {
                 }
             }
         }
+    }
+    if (jax.calendarFade > 0) {
+        window.jQuery('#calendar').fadeIn(jax.calendarFade);
+    } else {
+        window.jQuery('#calendar').show();
     }
 };
 
@@ -241,5 +265,12 @@ jax.setDateValue = function(date) {
             break;
     }
     window.jQuery(window.jQuery('#calendar-header').data('field')).val(date);
-    window.jQuery('#calendar').remove();
+    if (jax.calendarFade > 0) {
+        window.jQuery('#calendar').fadeOut(jax.calendarFade, function() {
+            window.jQuery('#calendar').remove();
+        });
+    } else {
+        window.jQuery('#calendar').hide();
+        window.jQuery('#calendar').remove();
+    }
 };
