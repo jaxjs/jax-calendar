@@ -265,6 +265,9 @@ jax.setDateValue = function(date) {
             break;
     }
     window.jQuery(window.jQuery('#calendar-header').data('field')).val(date);
+    if (window.jQuery(window.jQuery('#calendar-header').data('field'))[0].onchange != undefined) {
+        window.jQuery(window.jQuery('#calendar-header').data('field')).trigger('change');
+    }
     if (jax.calendarFade > 0) {
         window.jQuery('#calendar').fadeOut(jax.calendarFade, function() {
             window.jQuery('#calendar').remove();
