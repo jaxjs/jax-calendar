@@ -112,3 +112,13 @@
     font-weight: bold;
     background-color: #0774b7;
 }
+
+#calendar-table tr > td > a.day-outside {
+    color: #666;
+    font-weight: normal;
+    background-color: #dedede;
+}
+
+#calendar-table tr > td.day-outside {
+    background-color: #dedede;
+}

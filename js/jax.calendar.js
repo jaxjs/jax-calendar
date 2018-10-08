@@ -6,7 +6,7 @@
  * @link       https://github.com/jaxjs/jax-calendar
  * @category   jax-calendar
  * @author     Nick Sagona, III <dev@nolainteractive.com>
- * @copyright  Copyright (c) 2009-2017 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
  * @license    http://www.jaxjs.org/license     New BSD License
  * @version    3.0
  *
@@ -19,6 +19,7 @@ if (window.jax == undefined) {
 }
 
 jax.dateFormat     = 'mm/dd/yyyy';
+jax.otherMonths    = true;
 jax.calendarMonths = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
 ];
@@ -35,6 +36,9 @@ jax.calendar = function(clickObject, dateField, options) {
 
     jax.dateFormat = format;
 
+    if ((options != undefined) && (options.otherMonths != undefined)) {
+        jax.otherMonths = options.otherMonths;
+    }
     if ((options != undefined) && (options.months != undefined) && (options.months.constructor == Array)) {
         jax.calendarMonths = options.months;
     }
@@ -143,6 +147,17 @@ jax.buildMonth= function(date, curDay) {
     var numOfDays   = new Date(y, m + 1, 0).getDate();
     var firstDay    = new Date(y, m, 1);
     var numOfWeeks  = Math.ceil((firstDay.getDay() + numOfDays) / 7);
+    var prevDate    = new Date(y, m, 1, 0, 0, 0);
+    var nextDate    = new Date(y, m, numOfDays + 1);
+
+    prevDate.setHours(-1);
+
+    var prevMonth   = prevDate.getMonth() + 1;
+    var prevDay     = prevDate.getDate() - firstDay.getDay() + 1;
+    var prevYear    = prevDate.getFullYear();
+    var nextMonth   = nextDate.getMonth() + 1;
+    var nextDay     = nextDate.getDate();
+    var nextYear    = nextDate.getFullYear();
 
     var d = 1;
     for (var i = 0; i < numOfWeeks; i++) {
@@ -155,7 +170,14 @@ jax.buildMonth= function(date, curDay) {
                     window.jQuery('#calendar-table-row-' + (i + 1)).append('<td><a href="" onclick="window.jax.setDateValue(\'' + curDateValue + '\'); return false;"' + curClass + '>' + d + '</a></td>');
                     d++;
                 } else {
-                    window.jQuery('#calendar-table-row-' + (i + 1)).append('<td>&nbsp;</td>');
+                    curClass = ' class="day-outside"';
+                    if (window.jax.otherMonths) {
+                        curDateValue = prevMonth + '/' + prevDay + '/' + prevYear;
+                        window.jQuery('#calendar-table-row-' + (i + 1)).append('<td><a href="" onclick="window.jax.setDateValue(\'' + curDateValue + '\'); return false;"' + curClass + '>' + prevDay + '</a></td>');
+                        prevDay++;
+                    } else {
+                        window.jQuery('#calendar-table-row-' + (i + 1)).append('<td' + curClass + '>&nbsp;</td>');
+                    }
                 }
             } else {
                 if (d <= numOfDays) {
@@ -164,7 +186,14 @@ jax.buildMonth= function(date, curDay) {
                     window.jQuery('#calendar-table-row-' + (i + 1)).append('<td><a href="" onclick="window.jax.setDateValue(\'' + curDateValue + '\'); return false;"' + curClass + '>' + d + '</a></td>');
                     d++;
                 } else {
-                    window.jQuery('#calendar-table-row-' + (i + 1)).append('<td>&nbsp;</td>');
+                    curClass = ' class="day-outside"';
+                    if (window.jax.otherMonths) {
+                        curDateValue = nextMonth + '/' + nextDay + '/' + nextYear;
+                        window.jQuery('#calendar-table-row-' + (i + 1)).append('<td><a href="" onclick="window.jax.setDateValue(\'' + curDateValue + '\'); return false;"' + curClass + '>' + nextDay + '</a></td>');
+                        nextDay++;
+                    } else {
+                        window.jQuery('#calendar-table-row-' + (i + 1)).append('<td' + curClass + '>&nbsp;</td>');
+                    }
                 }
             }
         }
